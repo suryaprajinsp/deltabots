@@ -9,9 +9,10 @@
  }
  public float[] AndroidThunkJava_DeltaLoadViewer() {
    android.content.SharedPreferences prefs=getSharedPreferences("DeltaBotsViewer",0);
-   if(prefs.getInt("count",0)!=11) return null;
-   float[] values=new float[11];
-   for(int i=0;i<11;i++) values[i]=prefs.getFloat("v"+i,0);
+   int count=prefs.getInt("count",0);
+   if(count!=11 && count!=14) return null;
+   float[] values=new float[count];
+   for(int i=0;i<count;i++) values[i]=prefs.getFloat("v"+i,0);
    return values;
  }
  private android.hardware.Sensor deltaOrientationSensor;

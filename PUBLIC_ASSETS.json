@@ -15,6 +15,36 @@
     "basis": "Original project source or generated concept artwork"
   },
   {
+    "path": "ArtSource/DeltaFrontier/RefinedBots/DeltaBot_Concept_v02.blend",
+    "sha256": "e9f5f699e120fbfdbe167f782f7700712e5b6577ca28e8c54162b44f755d0200",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "ArtSource/DeltaFrontier/RefinedBots/DeltaBot_Concept_v02.glb",
+    "sha256": "4707d7ae6900d3cd84801cfd11938b12a3baee75211775cc66ba3d0084b8d8f7",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "ArtSource/DeltaFrontier/RefinedBots/DeltaBot_Concept_v02.png",
+    "sha256": "fc782434d300a5852e1a226c4d60475319b74626a596e690e860016401f34702",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "ArtSource/DeltaFrontier/RefinedBots/RhinoMaster_Concept_v02.blend",
+    "sha256": "9578fc8962cab9d87decf6977f0d07713d1b7ce7f4b021b27f2c8bffadf690c0",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "ArtSource/DeltaFrontier/RefinedBots/RhinoMaster_Concept_v02.glb",
+    "sha256": "c41bfaf6e4c32d72f5b0ef156651d917da82f2dbffa38cdd9d7d654cf425ac76",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "ArtSource/DeltaFrontier/RefinedBots/RhinoMaster_Concept_v02.png",
+    "sha256": "302d4e1456eebfca717215886d099f33f0283886f3da4cb51d2e6630b0f6a207",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
     "path": "ArtSource/DeltaFrontier/Review/plans/lower-plan.png",
     "sha256": "f5af2b6d13600643bb233fb5ad1443590205943e0f27617cd56156e796306a10",
     "basis": "Original project source or generated concept artwork"
@@ -86,7 +116,7 @@
   },
   {
     "path": "Plugins/DeltaPhoneModes/Source/DeltaPhoneModes/DeltaPhoneModes_APL.xml",
-    "sha256": "7314b3d14c3435fb45a604b8f0dc60cf1ad7e700d88c3ddac9c237757eb46c32",
+    "sha256": "266ce5306e4bdd028217e55f3365677932df2f98abd4ba732ea26adb12a0c57a",
     "basis": "Original project source or generated concept artwork"
   },
   {
@@ -101,7 +131,7 @@
   },
   {
     "path": "Plugins/DeltaPhoneModes/Source/DeltaPhoneModes/Private/DeltaPhoneModes.cpp",
-    "sha256": "dc7e830cc0e51200918d9fa287c0a47fc6b86e8e89b360353f0eb8d71325d393",
+    "sha256": "70e167fa23132c8a028bab6b9a2169c40f6e7fb17e438ab4bcbf362808ab1a1c",
     "basis": "Original project source or generated concept artwork"
   },
   {
@@ -120,13 +150,28 @@
     "basis": "Original project source or generated concept artwork"
   },
   {
+    "path": "Tools/WorldBuild/build_frontier_unreal.py",
+    "sha256": "c46ada06315ce99409d779dad1fc2593517e76d5871be084e06167d7cd014873",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
     "path": "Tools/WorldBuild/build_scarab_territory.py",
     "sha256": "2593d571d835f13d7e2a8583a7a8101d49731244b00c4aa25489af09a0d7e44b",
     "basis": "Original project source or generated concept artwork"
   },
   {
+    "path": "Tools/WorldBuild/integrate_frontier_assets.py",
+    "sha256": "04956c0bf688ce39fab39a872ade37d82f33e350918fc45502c9313a493d4eae",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
     "path": "Tools/WorldBuild/prepare_public_snapshot.py",
-    "sha256": "84ef93246a8a82e7069dbd677800e63f3823fd0ed7c8627b4dcf8ad27fbcf7a7",
+    "sha256": "f955630b64c0e815797b5d6786aab1f2fbd85a19fff7a6a4df87755063f545b6",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "Tools/WorldBuild/refine_models_blender.py",
+    "sha256": "2906d55a25e9f30307b2e70b90584dcd681a27241a378ac347e71678871b306c",
     "basis": "Original project source or generated concept artwork"
   }
 ]

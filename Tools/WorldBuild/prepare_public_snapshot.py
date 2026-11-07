@@ -11,13 +11,16 @@ FILES = [
     'Tools/WorldBuild/build_frontier_preview.py',
     'Tools/WorldBuild/build_scarab_territory.py',
     'Tools/WorldBuild/prepare_public_snapshot.py',
+    'Tools/WorldBuild/build_frontier_unreal.py',
+    'Tools/WorldBuild/integrate_frontier_assets.py',
+    'Tools/WorldBuild/refine_models_blender.py',
 ]
 for folder in ('ArtSource/DeltaFrontier', 'ArtSource/ThirdParty/Fab/SciFiTurret', 'Plugins/DeltaPhoneModes'):
     for path in (ROOT / folder).rglob('*'):
         if not path.is_file() or any(p in {'Binaries', 'Intermediate', '__pycache__'} for p in path.parts):
             continue
         # Publish original concept sources/renders, not internal review reports.
-        if folder == 'ArtSource/DeltaFrontier' and path.suffix.lower() not in {'.blend', '.png'}:
+        if folder == 'ArtSource/DeltaFrontier' and path.suffix.lower() not in {'.blend', '.png', '.glb'}:
             continue
         FILES.append(path.relative_to(ROOT).as_posix())
 
@@ -71,3 +74,4 @@ by publishing this snapshot.
 
 if __name__ == '__main__':
     main()
+

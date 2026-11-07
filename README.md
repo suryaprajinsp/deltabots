@@ -30,3 +30,7 @@ Binary model and texture files use Git LFS. Clone with Git LFS installed and run
 and hashes. Plugin source is experimental; physical phone/controller and Unreal
 integration testing are still required. No new gameplay or device test is implied
 by publishing this snapshot.
+
+## Frontier review update
+Original v02 rig concepts, six-district world-building source and phone control updates are included. The browser review source is in docs/. Driving, flight, swimming, final character assets, custom touch-layout editing and the timed forcefield remain in development.
+

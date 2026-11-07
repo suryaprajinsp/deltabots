@@ -16,6 +16,8 @@
 #include "Widgets/SOverlay.h"
 #include "Widgets/SBoxPanel.h"
 #include "Widgets/Layout/SBorder.h"
+#include "Widgets/Layout/SScrollBox.h"
+#include "Widgets/Layout/SBox.h"
 #include "Widgets/Input/SButton.h"
 #include "Widgets/Text/STextBlock.h"
 #include "Android/AndroidApplication.h"
@@ -66,6 +68,7 @@ class FDeltaPhoneModesModule final : public IModuleInterface
  FTSTicker::FDelegateHandle TickHandle;
  TArray<IConsoleObject*> Commands;
  bool bInstalled=false,bSettings=false,bCaptured=false,bToggleHeld=false,bCenterHeld=false,bSensor=false,bCentered=false,bInvertLookY=false,bExitHeld=false;
+ bool bInvertGyroYaw=false,bInvertGyroPitch=false,bGyroEnabled=true;
  int32 DisplayRotation=-1;
  FQuat SensorCenter=FQuat::Identity,FilteredHead=FQuat::Identity;
  float BodyYaw=0,BodyPitch=0;
@@ -92,15 +95,18 @@ class FDeltaPhoneModesModule final : public IModuleInterface
  FString ViewerDescription() const
  {
   auto L=Stereo->GetLens();
-  static const TCHAR* Names[]={TEXT("LEFT EYE HORIZONTAL"),TEXT("LEFT EYE VERTICAL"),TEXT("RIGHT EYE HORIZONTAL"),TEXT("RIGHT EYE VERTICAL"),TEXT("LENS SPACING"),TEXT("IMAGE SIZE"),TEXT("LENS CURVE"),TEXT("FIELD OF VIEW"),TEXT("VIRTUAL IPD"),TEXT("STICK Y INVERSION")};
-  const float Values[]={L.EyeOffset[0].X,L.EyeOffset[0].Y,L.EyeOffset[1].X,L.EyeOffset[1].Y,L.Inset,L.Size,L.Curve,Stereo->FOV,Stereo->IPD*1000,bInvertLookY?1.f:0.f};
-  return FString::Printf(TEXT("VR BOX CUSTOM PROFILE\n%d / 10  %s\nValue: %.3f\nD-pad: select / adjust\nTRIANGLE: reference fit\nOPTIONS: save and close"),ViewerRow+1,Names[ViewerRow],Values[ViewerRow]);
+  static const TCHAR* Names[]={TEXT("LEFT EYE HORIZONTAL"),TEXT("LEFT EYE VERTICAL"),TEXT("RIGHT EYE HORIZONTAL"),TEXT("RIGHT EYE VERTICAL"),TEXT("LENS SPACING"),TEXT("IMAGE SIZE"),TEXT("LENS CURVE"),TEXT("FIELD OF VIEW"),TEXT("VIRTUAL IPD"),TEXT("STICK Y INVERSION"),TEXT("GYRO YAW INVERSION"),TEXT("GYRO PITCH INVERSION"),TEXT("HEAD TRACKING")};
+  const float Values[]={L.EyeOffset[0].X,L.EyeOffset[0].Y,L.EyeOffset[1].X,L.EyeOffset[1].Y,L.Inset,L.Size,L.Curve,Stereo->FOV,Stereo->IPD*1000,bInvertLookY?1.f:0.f,bInvertGyroYaw?1.f:0.f,bInvertGyroPitch?1.f:0.f,bGyroEnabled?1.f:0.f};
+  return FString::Printf(TEXT("VR BOX CUSTOM PROFILE\n%d / 13  %s\nValue: %.3f\nD-pad: select / adjust\nTRIANGLE: reference fit\nOPTIONS: save and close"),ViewerRow+1,Names[ViewerRow],Values[ViewerRow]);
  }
  void ViewerAdjust(int32 Direction)
  {
   auto L=Stereo->GetLens();
   if(ViewerRow<4){float& V=(ViewerRow%2==0)?L.EyeOffset[ViewerRow/2].X:L.EyeOffset[ViewerRow/2].Y;V=FMath::Clamp(V+Direction*.005f,-.08f,.08f);Stereo->SetLens(L);}
   else if(ViewerRow==9)bInvertLookY=!bInvertLookY;
+  else if(ViewerRow==10)bInvertGyroYaw=!bInvertGyroYaw;
+  else if(ViewerRow==11)bInvertGyroPitch=!bInvertGyroPitch;
+  else if(ViewerRow==12){bGyroEnabled=!bGyroEnabled;Recenter();}
   else {const float Steps[]={.005f,.025f,.025f,2.f,.001f};Adjust(ViewerRow-4==0?1:ViewerRow-4==1?0:ViewerRow-4,Direction*Steps[ViewerRow-4]);}
  }
  void ViewerTouch(float X,float Y,int32 Width,int32 Height)
@@ -112,7 +118,7 @@ class FDeltaPhoneModesModule final : public IModuleInterface
   const FVector2f UV=(R*(1+L.Curve*R2+L.Curve*.2f*R2*R2)+FVector2f(1,1))*.5f;
   auto Hit=[&](float CX,float CY){return FMath::Abs(UV.X-CX)<.085f&&FMath::Abs(UV.Y-CY)<.035f;};
   if(Hit(.3f,.18f))Recenter();else if(Hit(.5f,.18f))ViewerMenu(!bViewerMenu);else if(Hit(.7f,.18f))SetMode(false);
-  else if(bViewerMenu){if(Hit(.3f,.55f))ViewerRow=(ViewerRow+9)%10;else if(Hit(.5f,.55f))AutoFit();else if(Hit(.7f,.55f))ViewerRow=(ViewerRow+1)%10;else if(Hit(.3f,.66f))ViewerAdjust(-1);else if(Hit(.7f,.66f))ViewerAdjust(1);else if(Hit(.5f,.66f))ViewerMenu(false);}
+  else if(bViewerMenu){if(Hit(.3f,.55f))ViewerRow=(ViewerRow+12)%13;else if(Hit(.5f,.55f))AutoFit();else if(Hit(.7f,.55f))ViewerRow=(ViewerRow+1)%13;else if(Hit(.3f,.66f))ViewerAdjust(-1);else if(Hit(.7f,.66f))ViewerAdjust(1);else if(Hit(.5f,.66f))ViewerMenu(false);}
  }
 
  APlayerController* Player() const
@@ -133,10 +139,10 @@ class FDeltaPhoneModesModule final : public IModuleInterface
   if(!Valid||V[5]<0.5f)return false;
   Rotation=FMath::RoundToInt(V[4]);
   const FQuat Device(V[1],V[2],V[3],V[0]);
-  // Display rotation describes the rendered screen relative to the natural
-  // device frame. Invert it to express screen-local head motion in that frame.
-  // Using +90 here reverses both pitch and yaw on landscape phones.
-  const FQuat DeviceFromScreen(FVector(0,0,1),FMath::DegreesToRadians(-90.f*Rotation));
+  // Express screen-local axes in the natural device frame. For ROTATION_90,
+  // screen X maps to device +Y and screen Y maps to device -X (Android
+  // SensorManager AXIS_Y / AXIS_MINUS_X). The previous -90 swapped both signs.
+  const FQuat DeviceFromScreen(FVector(0,0,1),FMath::DegreesToRadians(90.f*Rotation));
   Q=(Device*DeviceFromScreen).GetNormalized();
   return !Q.ContainsNaN();
  }
@@ -150,12 +156,15 @@ class FDeltaPhoneModesModule final : public IModuleInterface
   GConfig->SetFloat(SettingsSection,TEXT("IPD"),Stereo->IPD,GGameUserSettingsIni);
   GConfig->SetFloat(SettingsSection,TEXT("FOV"),Stereo->FOV,GGameUserSettingsIni);
   GConfig->SetBool(SettingsSection,TEXT("InvertLookY"),bInvertLookY,GGameUserSettingsIni);
+  GConfig->SetBool(SettingsSection,TEXT("InvertGyroYaw"),bInvertGyroYaw,GGameUserSettingsIni);
+  GConfig->SetBool(SettingsSection,TEXT("InvertGyroPitch"),bInvertGyroPitch,GGameUserSettingsIni);
+  GConfig->SetBool(SettingsSection,TEXT("GyroEnabled"),bGyroEnabled,GGameUserSettingsIni);
   GConfig->Flush(false,GGameUserSettingsIni);
-  GConfig->SetInt(SettingsSection,TEXT("ViewerProfileVersion"),3,GGameUserSettingsIni);GConfig->Flush(false,GGameUserSettingsIni);
+  GConfig->SetInt(SettingsSection,TEXT("ViewerProfileVersion"),4,GGameUserSettingsIni);GConfig->Flush(false,GGameUserSettingsIni);
   if(JNIEnv* Env=FAndroidApplication::GetJavaEnv())
   {
    static jmethodID Method=FJavaWrapper::FindMethod(Env,FJavaWrapper::GameActivityClassID,"AndroidThunkJava_DeltaSaveViewer","([F)V",true);
-   if(Method){const float V[]={L.Size,L.Inset,L.Curve,Stereo->IPD,Stereo->FOV,bInvertLookY?1.f:0.f,L.EyeOffset[0].X,L.EyeOffset[0].Y,L.EyeOffset[1].X,L.EyeOffset[1].Y,3.f};jfloatArray A=Env->NewFloatArray(11);if(A){Env->SetFloatArrayRegion(A,0,11,V);Env->CallVoidMethod(FJavaWrapper::GameActivityThis,Method,A);Env->DeleteLocalRef(A);}if(Env->ExceptionCheck())Env->ExceptionClear();}
+   if(Method){const float V[]={L.Size,L.Inset,L.Curve,Stereo->IPD,Stereo->FOV,bInvertLookY?1.f:0.f,L.EyeOffset[0].X,L.EyeOffset[0].Y,L.EyeOffset[1].X,L.EyeOffset[1].Y,4.f,bInvertGyroYaw?1.f:0.f,bInvertGyroPitch?1.f:0.f,bGyroEnabled?1.f:0.f};jfloatArray A=Env->NewFloatArray(14);if(A){Env->SetFloatArrayRegion(A,0,14,V);Env->CallVoidMethod(FJavaWrapper::GameActivityThis,Method,A);Env->DeleteLocalRef(A);}if(Env->ExceptionCheck())Env->ExceptionClear();}
   }
  }
  void LoadSettings()
@@ -163,7 +172,7 @@ class FDeltaPhoneModesModule final : public IModuleInterface
   if(JNIEnv* Env=FAndroidApplication::GetJavaEnv())
   {
    static jmethodID Method=FJavaWrapper::FindMethod(Env,FJavaWrapper::GameActivityClassID,"AndroidThunkJava_DeltaLoadViewer","()[F",true);
-   if(Method){auto A=(jfloatArray)Env->CallObjectMethod(FJavaWrapper::GameActivityThis,Method);if(Env->ExceptionCheck()){Env->ExceptionClear();A=nullptr;}if(A){float V[11]={};bool Valid=Env->GetArrayLength(A)==11;if(Valid)Env->GetFloatArrayRegion(A,0,11,V);Env->DeleteLocalRef(A);for(float F:V)Valid=Valid&&FMath::IsFinite(F);if(Valid&&V[10]==3){FDeltaLensSettings L;L.Size=FMath::Clamp(V[0],.85f,1.12f);L.Inset=FMath::Clamp(V[1],0.f,.15f);L.Curve=FMath::Clamp(V[2],0.f,.45f);Stereo->IPD=FMath::Clamp(V[3],.055f,.075f);Stereo->FOV=FMath::Clamp(V[4],85.f,110.f);bInvertLookY=V[5]>.5f;for(int32 E=0;E<2;++E)L.EyeOffset[E]=FVector2f(FMath::Clamp(V[6+E*2],-.08f,.08f),FMath::Clamp(V[7+E*2],-.08f,.08f));Stereo->SetLens(L);return;}}}
+   if(Method){auto A=(jfloatArray)Env->CallObjectMethod(FJavaWrapper::GameActivityThis,Method);if(Env->ExceptionCheck()){Env->ExceptionClear();A=nullptr;}if(A){float V[14]={};V[13]=1;int32 Count=Env->GetArrayLength(A);bool Valid=Count==11||Count==14;if(Valid)Env->GetFloatArrayRegion(A,0,Count,V);Env->DeleteLocalRef(A);for(float F:V)Valid=Valid&&FMath::IsFinite(F);if(Valid&&(V[10]==3||V[10]==4)){FDeltaLensSettings L;L.Size=FMath::Clamp(V[0],.85f,1.12f);L.Inset=FMath::Clamp(V[1],0.f,.15f);L.Curve=FMath::Clamp(V[2],0.f,.45f);Stereo->IPD=FMath::Clamp(V[3],.055f,.075f);Stereo->FOV=FMath::Clamp(V[4],85.f,110.f);bInvertLookY=V[5]>.5f;bInvertGyroYaw=V[11]>.5f;bInvertGyroPitch=V[12]>.5f;bGyroEnabled=V[13]>.5f;for(int32 E=0;E<2;++E)L.EyeOffset[E]=FVector2f(FMath::Clamp(V[6+E*2],-.08f,.08f),FMath::Clamp(V[7+E*2],-.08f,.08f));Stereo->SetLens(L);return;}}}
   }
   FDeltaLensSettings L;
   for(int32 Eye=0;Eye<2;++Eye){GConfig->GetFloat(SettingsSection,*FString::Printf(TEXT("Eye%dX"),Eye),L.EyeOffset[Eye].X,GGameUserSettingsIni);GConfig->GetFloat(SettingsSection,*FString::Printf(TEXT("Eye%dY"),Eye),L.EyeOffset[Eye].Y,GGameUserSettingsIni);L.EyeOffset[Eye].X=FMath::Clamp(L.EyeOffset[Eye].X,-.08f,.08f);L.EyeOffset[Eye].Y=FMath::Clamp(L.EyeOffset[Eye].Y,-.08f,.08f);}
@@ -174,6 +183,9 @@ class FDeltaPhoneModesModule final : public IModuleInterface
   GConfig->GetFloat(SettingsSection,TEXT("IPD"),Stereo->IPD,GGameUserSettingsIni);Stereo->IPD=FMath::Clamp(Stereo->IPD,0.055f,0.075f);
   GConfig->GetFloat(SettingsSection,TEXT("FOV"),Stereo->FOV,GGameUserSettingsIni);Stereo->FOV=FMath::Clamp(Stereo->FOV,85.f,110.f);
   GConfig->GetBool(SettingsSection,TEXT("InvertLookY"),bInvertLookY,GGameUserSettingsIni);
+  GConfig->GetBool(SettingsSection,TEXT("InvertGyroYaw"),bInvertGyroYaw,GGameUserSettingsIni);
+  GConfig->GetBool(SettingsSection,TEXT("InvertGyroPitch"),bInvertGyroPitch,GGameUserSettingsIni);
+  GConfig->GetBool(SettingsSection,TEXT("GyroEnabled"),bGyroEnabled,GGameUserSettingsIni);
   int32 ProfileVersion=0;GConfig->GetInt(SettingsSection,TEXT("ViewerProfileVersion"),ProfileVersion,GGameUserSettingsIni);if(ProfileVersion<3)AutoFit();
  }
  void CaptureInputs(APlayerController* PC,bool Capture)
@@ -233,11 +245,14 @@ class FDeltaPhoneModesModule final : public IModuleInterface
   auto Row=[&](const TCHAR* Minus,const TCHAR* Plus,int32 Which,float Step){Settings->AddSlot().AutoHeight()[SNew(SHorizontalBox)+SHorizontalBox::Slot().FillWidth(1)[Button(Minus,[this,Which,Step]{return Adjust(Which,-Step);})]+SHorizontalBox::Slot().FillWidth(1)[Button(Plus,[this,Which,Step]{return Adjust(Which,Step);})]];};
   Row(TEXT("IMAGE -"),TEXT("IMAGE +"),0,0.025f);Row(TEXT("LENS IN -"),TEXT("LENS IN +"),1,0.01f);Row(TEXT("CURVE -"),TEXT("CURVE +"),2,0.025f);Row(TEXT("FOV -"),TEXT("FOV +"),3,5);Row(TEXT("IPD -"),TEXT("IPD +"),4,0.002f);
   Settings->AddSlot().AutoHeight()[Button(TEXT("TOGGLE LOOK-Y INVERSION"),[this]{bInvertLookY=!bInvertLookY;SaveSettings();return FReply::Handled();})];
+  Settings->AddSlot().AutoHeight()[Button(TEXT("GYRO YAW: TOGGLE DIRECTION"),[this]{bInvertGyroYaw=!bInvertGyroYaw;Recenter();SaveSettings();return FReply::Handled();})];
+  Settings->AddSlot().AutoHeight()[Button(TEXT("GYRO PITCH: TOGGLE DIRECTION"),[this]{bInvertGyroPitch=!bInvertGyroPitch;Recenter();SaveSettings();return FReply::Handled();})];
+  Settings->AddSlot().AutoHeight()[Button(TEXT("HEAD TRACKING: ON / OFF"),[this]{bGyroEnabled=!bGyroEnabled;Recenter();SaveSettings();return FReply::Handled();})];
   Settings->AddSlot().AutoHeight()[SNew(STextBlock).Text_Lambda([this]{auto L=Stereo->GetLens();return FText::FromString(FString::Printf(TEXT("Image %.0f%% | Inset %.2f | Curve %.2f\nFOV %.0f | IPD %.0f mm | Look Y %s"),L.Size*100,L.Inset,L.Curve,Stereo->FOV,Stereo->IPD*1000,bInvertLookY?TEXT("INVERTED"):TEXT("NORMAL")));})];
   auto Root=SNew(SOverlay)
    +SOverlay::Slot()[SNew(SHorizontalBox).Visibility_Lambda([this]{return Stereo->IsStereoEnabled()?EVisibility::HitTestInvisible:EVisibility::Collapsed;})+SHorizontalBox::Slot().FillWidth(1)[EyeOverlay(0)]+SHorizontalBox::Slot().FillWidth(1)[EyeOverlay(1)]]
    +SOverlay::Slot().HAlign(HAlign_Center).VAlign(VAlign_Top).Padding(0,12,0,0)[Controls]
-   +SOverlay::Slot().HAlign(HAlign_Center).VAlign(VAlign_Top).Padding(0,90,0,0)[SNew(SBorder).BorderBackgroundColor(FLinearColor(0.015,0.035,0.06,0.98)).Padding(18).Visibility_Lambda([this]{return bSettings?EVisibility::Visible:EVisibility::Collapsed;})[Settings]];
+   +SOverlay::Slot().HAlign(HAlign_Center).VAlign(VAlign_Top).Padding(0,90,0,0)[SNew(SBorder).BorderBackgroundColor(FLinearColor(0.015,0.035,0.06,0.98)).Padding(18).Visibility_Lambda([this]{return bSettings?EVisibility::Visible:EVisibility::Collapsed;})[SNew(SBox).MaxDesiredHeight(480)[SNew(SScrollBox)+SScrollBox::Slot()[Settings]]]];
   Overlay=Root;OverlayViewport=GEngine->GameViewport;GEngine->GameViewport->AddViewportWidgetContent(Root,100);
  }
  bool Tick(float Delta)
@@ -265,27 +280,53 @@ class FDeltaPhoneModesModule final : public IModuleInterface
    const int32 Vertical=int32(Down(PC,EKeys::Gamepad_DPad_Down))-int32(Down(PC,EKeys::Gamepad_DPad_Up));
    const int32 Horizontal=int32(Down(PC,EKeys::Gamepad_DPad_Right))-int32(Down(PC,EKeys::Gamepad_DPad_Left));
    const bool Nav=Vertical!=0||Horizontal!=0;NavRepeat-=Delta;
-   if(Nav&&(!bNavHeld||NavRepeat<=0)){if(Vertical)ViewerRow=(ViewerRow+Vertical+10)%10;else ViewerAdjust(Horizontal);NavRepeat=bNavHeld?.12f:.35f;}bNavHeld=Nav;
+   if(Nav&&(!bNavHeld||NavRepeat<=0)){if(Vertical)ViewerRow=(ViewerRow+Vertical+13)%13;else ViewerAdjust(Horizontal);NavRepeat=bNavHeld?.12f:.35f;}bNavHeld=Nav;
   }
   else {bNavHeld=false;bAutoHeld=false;}
   CaptureInputs(PC,Stereo->IsStereoEnabled()||bSettings);
   if(auto* HUD=PC->GetHUD())HUD->bShowHUD=!(Stereo->IsStereoEnabled()||bSettings);
-  if(!Stereo->IsStereoEnabled()||bSettings)return true;
+  if(bSettings)return true;
+  if(!Stereo->IsStereoEnabled())
+  {
+   // The input preprocessor consumes only the four analog sticks in mobile
+   // mode. Touch look and digital actions continue through the existing HUD.
+   const float Dt=FMath::Clamp(Delta,0.f,.05f);
+   const FVector2D Look=Stick(Axis(PC,EKeys::Gamepad_RightX),Axis(PC,EKeys::Gamepad_RightY));
+   SmoothStick=FMath::Lerp(SmoothStick,Look,1-FMath::Exp(-Dt*24));
+   if(!SmoothStick.IsNearlyZero(.001f))
+   {
+    FRotator View=PC->GetControlRotation();View.Yaw+=SmoothStick.X*90*Dt;
+    View.Pitch=FMath::Clamp(FRotator::NormalizeAxis(View.Pitch)+SmoothStick.Y*(bInvertLookY?-1:1)*65*Dt,-70.f,70.f);
+    View.Roll=0;PC->SetControlRotation(View);
+   }
+   if(APawn* Pawn=PC->GetPawn())
+   {
+    const FBoolProperty* Defeated=FindFProperty<FBoolProperty>(Pawn->GetClass(),TEXT("bDefeated"));
+    if(Defeated&&Defeated->GetPropertyValue_InContainer(Pawn))return true;
+    const FVector2D Move=Stick(Axis(PC,EKeys::Gamepad_LeftX),Axis(PC,EKeys::Gamepad_LeftY));
+    const FRotator Heading(0,PC->GetControlRotation().Yaw,0);
+    Pawn->AddMovementInput(Heading.Vector(),Move.Y);Pawn->AddMovementInput(Heading.Quaternion().GetRightVector(),Move.X);
+   }
+   return true;
+  }
   const float Dt=FMath::Clamp(Delta,0.f,0.05f);
-  FQuat Sample;int32 Rotation=0;bSensor=HeadPose(Sample,Rotation);
+  FQuat Sample;int32 Rotation=0;bSensor=bGyroEnabled&&HeadPose(Sample,Rotation);
   if(bSensor)
   {
    if(!bCentered||Rotation!=DisplayRotation){SensorCenter=Sample;DisplayRotation=Rotation;bCentered=true;FilteredHead=FQuat::Identity;}
    const FQuat Relative=(SensorCenter.Inverse()*Sample).GetNormalized();
    // Android screen axes: right/up/toward viewer. Unreal: forward/right/up, opposite handedness.
-   const FQuat Head(Relative.Z,-Relative.X,-Relative.Y,Relative.W);
+   FRotator HeadAngles=FQuat(Relative.Z,-Relative.X,-Relative.Y,Relative.W).Rotator();
+   if(bInvertGyroYaw)HeadAngles.Yaw=-HeadAngles.Yaw;
+   if(bInvertGyroPitch)HeadAngles.Pitch=-HeadAngles.Pitch;
+   const FQuat Head=HeadAngles.Quaternion();
    FilteredHead=FQuat::Slerp(FilteredHead,Head,1-FMath::Exp(-Dt/0.018f)).GetNormalized();
   }
-  else bCentered=false;
+  else {bCentered=false;FilteredHead=FQuat::Identity;}
   FVector2D Look=Stick(Axis(PC,EKeys::Gamepad_RightX),Axis(PC,EKeys::Gamepad_RightY));
   SmoothStick=FMath::Lerp(SmoothStick,Look,1-FMath::Exp(-Dt*24));
   if(bViewerMenu)SmoothStick=FVector2D::ZeroVector;
-  BodyYaw+=SmoothStick.X*90*Dt;BodyPitch=FMath::Clamp(BodyPitch+SmoothStick.Y*(bInvertLookY?1:-1)*65*Dt,-70.f,70.f);
+  BodyYaw+=SmoothStick.X*90*Dt;BodyPitch=FMath::Clamp(BodyPitch+SmoothStick.Y*(bInvertLookY?-1:1)*65*Dt,-70.f,70.f);
   const FRotator View=(FRotator(BodyPitch,BodyYaw,0).Quaternion()*FilteredHead).Rotator();PC->SetControlRotation(View);
   if(bViewerMenu)return true;
   if(APawn* Pawn=PC->GetPawn())
@@ -314,7 +355,8 @@ public:
   };
   ViewerInput->CaptureAnalog=[this](FKey Key,float Value)
   {
-   if(!Stereo->IsStereoEnabled())return false;
+   const bool StickAxis=Key==EKeys::Gamepad_LeftX||Key==EKeys::Gamepad_LeftY||Key==EKeys::Gamepad_RightX||Key==EKeys::Gamepad_RightY;
+   if(!Stereo->IsStereoEnabled())return StickAxis;
    if(!bViewerMenu&&Key!=EKeys::Gamepad_LeftX&&Key!=EKeys::Gamepad_LeftY&&Key!=EKeys::Gamepad_RightX&&Key!=EKeys::Gamepad_RightY)
     if(auto* PC=Player())PC->InputKey(FInputKeyParams(Key,Value,1.f/60,1,true));
    return true;
@@ -336,3 +378,4 @@ public:
  }
 };
 IMPLEMENT_MODULE(FDeltaPhoneModesModule,DeltaPhoneModes)
+
