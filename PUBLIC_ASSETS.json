@@ -1,0 +1,132 @@
+[
+  {
+    "path": ".gitattributes",
+    "sha256": "8029d6d7f71ca7ccb4db9ebb26a15e966445d30b8a43e3e087aa82e0cae7b738",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "ArtSource/DeltaFrontier/DeltaBot_Rig_Concept.blend",
+    "sha256": "4685f0c3c4d3e77bca48f073accc6c0ac92d11dc509696f2ee03bc84430d3f5c",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "ArtSource/DeltaFrontier/DeltaFrontier_Concept.blend",
+    "sha256": "d8ab74cc5a90769ffe7b1dcb4d7efc0301ddc4b7214044b4fb4a18ecbcc135e9",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "ArtSource/DeltaFrontier/Review/plans/lower-plan.png",
+    "sha256": "f5af2b6d13600643bb233fb5ad1443590205943e0f27617cd56156e796306a10",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "ArtSource/DeltaFrontier/Review/renders/delta-bot-rig.png",
+    "sha256": "b7bf2de8ec30a7744c78ada2a32d7d5f8f38182bf4210ccfc824b469a5e72c80",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "ArtSource/DeltaFrontier/Review/renders/scarab-basin.png",
+    "sha256": "2b9b54dd91aaec5df3b20d34a4f0aba1303b4bc8129991e4897878fdead024db",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "ArtSource/DeltaFrontier/Review/renders/world-overview.png",
+    "sha256": "f6d4d2bb4538e63f52ccd2c71581ea372857e52636c5ea7d471cd43fbbcea4d0",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "ArtSource/DeltaFrontier/ScarabBasin_Concept.blend",
+    "sha256": "8b2c87cc475cf23b0f527995dd1cb25e733a21935c6f985c2829806734adba34",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "ArtSource/ThirdParty/Fab/SciFiTurret/license.txt",
+    "sha256": "8bd29d0cfc0a90dbef0b3232d76b8a96590f22e54242fbf6c00024baa404c6ac",
+    "basis": "CC-BY-4.0; attribution in adjacent license.txt"
+  },
+  {
+    "path": "ArtSource/ThirdParty/Fab/SciFiTurret/scene.bin",
+    "sha256": "7665c5f63cf4dba2591f594dc46d619bdb4a80b29e0fefd6612cb8448eab0a02",
+    "basis": "CC-BY-4.0; attribution in adjacent license.txt"
+  },
+  {
+    "path": "ArtSource/ThirdParty/Fab/SciFiTurret/scene.gltf",
+    "sha256": "b1757ef66b5d90eb2987bd7856b96d8d0a8b65a9554e6ac22823ddc1bf3e345e",
+    "basis": "CC-BY-4.0; attribution in adjacent license.txt"
+  },
+  {
+    "path": "ArtSource/ThirdParty/Fab/SciFiTurret/textures/Scifiturret_baseColor.jpeg",
+    "sha256": "2d8d0255c35d92ab9ec36f3764a092a677872ff0feec2c6c1f8beb614fca6d09",
+    "basis": "CC-BY-4.0; attribution in adjacent license.txt"
+  },
+  {
+    "path": "ArtSource/ThirdParty/Fab/SciFiTurret/textures/Scifiturret_emissive.jpeg",
+    "sha256": "d9c583f70b69beee11083512e3ae3538501eb06fb002851683c394baf87514a2",
+    "basis": "CC-BY-4.0; attribution in adjacent license.txt"
+  },
+  {
+    "path": "ArtSource/ThirdParty/Fab/SciFiTurret/textures/Scifiturret_metallicRoughness.png",
+    "sha256": "8a853174abc9d71a9a1093cb3c09b62d8ccb5f6ae410dfa299cf6fa6712ac021",
+    "basis": "CC-BY-4.0; attribution in adjacent license.txt"
+  },
+  {
+    "path": "ArtSource/ThirdParty/Fab/SciFiTurret/textures/Scifiturret_normal.png",
+    "sha256": "cbac2936f54b8c9fbb6e50cf2c1058bdef0edc81e0d9003afa0e919120a5975b",
+    "basis": "CC-BY-4.0; attribution in adjacent license.txt"
+  },
+  {
+    "path": "Plugins/DeltaPhoneModes/DeltaPhoneModes.uplugin",
+    "sha256": "464eeb0eae5018c3551c52534b6748823970f00b1c16c7b177a5cb028e58066f",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "Plugins/DeltaPhoneModes/Source/DeltaPhoneModes/DeltaPhoneModes.Build.cs",
+    "sha256": "ed7be0ea540ba531a923c71c87d8cc0c24187576178b525d1b2a934351e2813d",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "Plugins/DeltaPhoneModes/Source/DeltaPhoneModes/DeltaPhoneModes_APL.xml",
+    "sha256": "7314b3d14c3435fb45a604b8f0dc60cf1ad7e700d88c3ddac9c237757eb46c32",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "Plugins/DeltaPhoneModes/Source/DeltaPhoneModes/Private/DeltaLens.cpp",
+    "sha256": "ea78811fccc433ec98f9235b0c80b1cfa5bdda62be82306b9634ad75fc05585b",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "Plugins/DeltaPhoneModes/Source/DeltaPhoneModes/Private/DeltaLens.h",
+    "sha256": "52b71ecb2ab0ecef6031f1d8804a91c79e35019d65e5e193f65e3be99228a537",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "Plugins/DeltaPhoneModes/Source/DeltaPhoneModes/Private/DeltaPhoneModes.cpp",
+    "sha256": "dc7e830cc0e51200918d9fa287c0a47fc6b86e8e89b360353f0eb8d71325d393",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "Plugins/DeltaPhoneModes/Source/DeltaPhoneModes/Private/DeltaViewerInput.h",
+    "sha256": "5a3a184699ce4ec49cdc48e5623286faf2231212444bff539bb89cb052b4f260",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "Plugins/DeltaPhoneModes/Source/DeltaPhoneModes/Private/DeltaViewerPanel.h",
+    "sha256": "c5492ce31662f00cfe1b3f5919e9c8e6d7f58f2e9ce5812b533ba35111dbce2b",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "Tools/WorldBuild/build_frontier_preview.py",
+    "sha256": "8a7cc379162927d4073cbf850ff37006b884d815a85f883453e0d95722424704",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "Tools/WorldBuild/build_scarab_territory.py",
+    "sha256": "2593d571d835f13d7e2a8583a7a8101d49731244b00c4aa25489af09a0d7e44b",
+    "basis": "Original project source or generated concept artwork"
+  },
+  {
+    "path": "Tools/WorldBuild/prepare_public_snapshot.py",
+    "sha256": "84ef93246a8a82e7069dbd677800e63f3823fd0ed7c8627b4dcf8ad27fbcf7a7",
+    "basis": "Original project source or generated concept artwork"
+  }
+]

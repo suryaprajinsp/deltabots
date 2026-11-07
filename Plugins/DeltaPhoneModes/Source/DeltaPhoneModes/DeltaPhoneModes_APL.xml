@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+ <gameActivityClassAdditions><insert><![CDATA[
+ private android.hardware.SensorManager deltaSensorManager;
+ public void AndroidThunkJava_DeltaSaveViewer(float[] values) {
+   android.content.SharedPreferences.Editor edit=getSharedPreferences("DeltaBotsViewer",0).edit();
+   for(int i=0;i<values.length;i++) edit.putFloat("v"+i,values[i]);
+   edit.putInt("count",values.length);edit.apply();
+ }
+ public float[] AndroidThunkJava_DeltaLoadViewer() {
+   android.content.SharedPreferences prefs=getSharedPreferences("DeltaBotsViewer",0);
+   if(prefs.getInt("count",0)!=11) return null;
+   float[] values=new float[11];
+   for(int i=0;i<11;i++) values[i]=prefs.getFloat("v"+i,0);
+   return values;
+ }
+ private android.hardware.Sensor deltaOrientationSensor;
+ private final Object deltaPoseLock = new Object();
+ private final float[] deltaPose = {1,0,0,0,0,0};
+ private final android.hardware.SensorEventListener deltaPoseListener = new android.hardware.SensorEventListener() {
+   public void onAccuracyChanged(android.hardware.Sensor s,int accuracy) {}
+   public void onSensorChanged(android.hardware.SensorEvent e) {
+     float[] q = new float[4];
+     android.hardware.SensorManager.getQuaternionFromVector(q,e.values);
+     synchronized(deltaPoseLock) {
+       System.arraycopy(q,0,deltaPose,0,4);
+       deltaPose[4]=getWindowManager().getDefaultDisplay().getRotation();
+       deltaPose[5]=1;
+     }
+   }
+ };
+ public float[] AndroidThunkJava_DeltaHeadPose() {
+   synchronized(deltaPoseLock) { return deltaPose.clone(); }
+ }
+ private void deltaStartHeadSensor() {
+   if(deltaSensorManager==null) {
+     deltaSensorManager=(android.hardware.SensorManager)getSystemService(android.content.Context.SENSOR_SERVICE);
+     deltaOrientationSensor=deltaSensorManager.getDefaultSensor(android.hardware.Sensor.TYPE_GAME_ROTATION_VECTOR);
+     if(deltaOrientationSensor==null) deltaOrientationSensor=deltaSensorManager.getDefaultSensor(android.hardware.Sensor.TYPE_ROTATION_VECTOR);
+   }
+   if(deltaOrientationSensor!=null) deltaSensorManager.registerListener(deltaPoseListener,deltaOrientationSensor,android.hardware.SensorManager.SENSOR_DELAY_GAME);
+ }
+ private void deltaStopHeadSensor() {
+   if(deltaSensorManager!=null) deltaSensorManager.unregisterListener(deltaPoseListener);
+   synchronized(deltaPoseLock) { deltaPose[5]=0; }
+ }
+ ]]></insert></gameActivityClassAdditions>
+ <gameActivityOnResumeAdditions><insert>deltaStartHeadSensor();</insert></gameActivityOnResumeAdditions>
+ <gameActivityOnPauseAdditions><insert>deltaStopHeadSensor();</insert></gameActivityOnPauseAdditions>
+</root>

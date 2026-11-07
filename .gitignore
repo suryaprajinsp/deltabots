@@ -1,0 +1,8 @@
+Binaries/
+Intermediate/
+Saved/
+DerivedDataCache/
+__pycache__/
+*.pyc
+*.blend1
+.env*

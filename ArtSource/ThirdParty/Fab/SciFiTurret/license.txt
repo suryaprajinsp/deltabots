@@ -1,0 +1,11 @@
+Model Information:
+* title:	Sci fi turret
+* source:	https://sketchfab.com/3d-models/sci-fi-turret-1800dfe7fe3241808574ba6d11a9bb21
+* author:	NavXGen game assets (https://sketchfab.com/genaronavarro)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Sci fi turret" (https://sketchfab.com/3d-models/sci-fi-turret-1800dfe7fe3241808574ba6d11a9bb21) by NavXGen game assets (https://sketchfab.com/genaronavarro) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
