@@ -11,20 +11,20 @@ function box(x,y,z,w,h,d,color='ivory',solid=false){const o=new THREE.Mesh(new T
 box(0,-.5,0,360,1,360,'grass');box(0,.01,-35,110,.05,8,'sand');box(-45,.01,0,8,.05,100,'sand');box(0,.01,40,110,.05,8,'sand');box(45,.01,0,8,.05,100,'sand');box(0,.01,0,8,.05,75,'sand');
 // Hazard floor colors communicate the zones before dense visual dressing.
 box(-35,.03,35,35,.08,30,'orange');box(35,.03,-30,30,.08,28,'ice');box(38,.03,37,30,.08,26,'teal');
-function building(x,z,w=9,d=8){box(x,2.5,z,w,5,d,'ivory',true);box(x,5.15,z,w+.4,.3,d+.4,'teal');box(x,5.45,z,w*.8,.18,d*.65,'solar');box(x,2,z-d/2-.02,2.2,3,.05,'dark');box(x,4.05,z-d/2-.06,2.4,.12,.06,'cyan')}
+function building(x,z,w=9,d=8,elevation=0){box(x,2.5+elevation,z,w,5,d,'ivory',true);box(x,5.15+elevation,z,w+.4,.3,d+.4,'teal');box(x,5.45+elevation,z,w*.8,.18,d*.65,'solar');box(x,2+elevation,z-d/2-.02,2.2,3,.05,'dark');box(x,4.05+elevation,z-d/2-.06,2.4,.12,.06,'cyan')}
 for(const p of [[-48,-25],[-30,-25],[-42,32],[-22,35],[30,-30],[48,-23],[40,38]])building(...p);
 for(const [x,z] of [[-20,-34],[15,-39],[42,0],[20,40],[-43,8],[-8,20]])box(x,.7,z,3,1.4,1.4,'teal',true);
 for(const x of [-49,-41]){box(x,3,-43,1,6,1.2,'dark',true);box(x,3,-43.65,.15,5,.08,'cyan')}box(-45,6,-43,9,1,1.2,'ivory');
 // Low-poly environment uses shared materials and simple geometry.
 let seed=17;function rnd(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}
 for(let i=0;i<40;i++){let x=rnd()*130-65,z=rnd()*130-65;if(Math.min(Math.abs(z+35),Math.abs(z-40),Math.abs(x+45),Math.abs(x-45),Math.abs(x))<8)continue;const rock=new THREE.Mesh(new THREE.IcosahedronGeometry(1.5+rnd()*2,0),materials.clay);rock.position.set(x,1,z);rock.scale.y=.6;scene.add(rock)}
-for(const [x,z] of [[-62,-50],[-62,15],[-20,60],[58,55],[60,-50]]){box(x,2,z,.6,4,.6,'clay');const crown=new THREE.Mesh(new THREE.IcosahedronGeometry(3,1),materials.teal);crown.position.set(x,5,z);scene.add(crown)}
+for(const [x,z] of [[-62,-50],[-62,15],[-20,60],[58,55],[60,-50]]){box(x,2+elevation,z,.6,4,.6,'clay');const crown=new THREE.Mesh(new THREE.IcosahedronGeometry(3,1),materials.teal);crown.position.set(x,5,z);scene.add(crown)}
 
 // Original browser geometry for reviewing the six district palettes.
 const districts={nexus:[0,0,100],desert:[-110,0,0],snow:[-100,0,-100],forest:[100,0,-100],sky:[100,16,0],abyss:[100,0,100]};
 for(const [name,[x,y,z]] of Object.entries(districts)){
- box(x,y-.2,z,65,.3,65,name==='desert'?'sand':name==='snow'?'ice':name==='forest'?'grass':'teal');
- if(['nexus','sky','abyss'].includes(name))for(let i=0;i<8;i++){const a=i*Math.PI/4;building(x+Math.cos(a)*24,z+Math.sin(a)*24,7,7);if(y) { /* sky is a palette study; no flight physics */ }}
+ box(x,y+.02,z,65,.1,65,name==='desert'?'sand':name==='snow'?'ice':name==='forest'?'grass':'teal');
+ if(['nexus','sky','abyss'].includes(name))for(let i=0;i<8;i++){const a=i*Math.PI/4;building(x+Math.cos(a)*24,z+Math.sin(a)*24,7,7,y);}
  if(name==='desert'||name==='snow')for(let i=0;i<7;i++){const a=i*6.28/7;const r=new THREE.Mesh(new THREE.IcosahedronGeometry(7,0),materials[name==='snow'?'ivory':'clay']);r.scale.y=1.8;r.position.set(x+Math.cos(a)*30,5,z+Math.sin(a)*30);scene.add(r)}
  if(name==='forest')for(let i=0;i<15;i++){const px=x+(rnd()-.5)*55,pz=z+(rnd()-.5)*55;box(px,3,pz,.8,6,.8,'clay');const c=new THREE.Mesh(new THREE.IcosahedronGeometry(3,1),materials.teal);c.position.set(px,7,pz);scene.add(c)}
  if(name==='abyss'){const dome=new THREE.Mesh(new THREE.SphereGeometry(32,24,12),new THREE.MeshLambertMaterial({color:0x35bad1,transparent:true,opacity:.15,side:THREE.DoubleSide}));dome.position.set(x,0,z);scene.add(dome)}
