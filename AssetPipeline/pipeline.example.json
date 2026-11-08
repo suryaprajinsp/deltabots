@@ -1,0 +1,14 @@
+{
+  "blender": "C:/Program Files/Blender Foundation/Blender 5.2/blender.exe",
+  "unreal_editor": "C:/Program Files/Epic Games/UE_5.8/Engine/Binaries/Win64/UnrealEditor-Cmd.exe",
+  "projects": {
+    "deltabots": {
+      "uproject": null,
+      "content": "/Game/DeltaBots/Generated"
+    },
+    "resonance": {
+      "uproject": null,
+      "content": "/Game/Resonance/Generated"
+    }
+  }
+}

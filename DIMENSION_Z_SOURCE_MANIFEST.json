@@ -1,0 +1,117 @@
+[
+  {
+    "path": "AssetPipeline/asset_bridge.py",
+    "sha256": "f2fca86236d73995697b0eabd15079045ed625eae04054a4b23e96c18ce52d60",
+    "basis": "Original Dimension Z source"
+  },
+  {
+    "path": "AssetPipeline/blender_prepare.py",
+    "sha256": "154ec277c654af6c8fada24b2d8652f48c77451ed33b657ea8b8d0ad46805181",
+    "basis": "Original Dimension Z source"
+  },
+  {
+    "path": "AssetPipeline/README.md",
+    "sha256": "b174825bf8f92bca9ecedff72a6da0c8f3b403426b001bc6495a42ee6efe1cbc",
+    "basis": "Original Dimension Z source"
+  },
+  {
+    "path": "AssetPipeline/tripo.ps1",
+    "sha256": "217ae877a2002bafd3dba8c4e08c1ebdb8d06a12629d8ee1be32fafae0dd1bca",
+    "basis": "Original Dimension Z source"
+  },
+  {
+    "path": "AssetPipeline/unreal_import.py",
+    "sha256": "f4b2aa09e38c07a386bea9783a73ac960b12c8f6cf7ecae3b0b5b9c1d7895bdc",
+    "basis": "Original Dimension Z source"
+  },
+  {
+    "path": "dimension-z-app/build.ps1",
+    "sha256": "3dd550a5579c14e344b4f789dc4ad32b6cd962009afeb5e7ccdba70b9c13d843",
+    "basis": "Original Dimension Z source"
+  },
+  {
+    "path": "dimension-z-app/README.md",
+    "sha256": "b0e0f28136b9c52fddb27bb20ac331f5c4125c997c5ea046530d4d3fee9f95d5",
+    "basis": "Original Dimension Z source"
+  },
+  {
+    "path": "dimension-z-app/app/src/main/AndroidManifest.xml",
+    "sha256": "18ddeeba1d491ea95c14db21f6e1b572ec570e808593efd7c3976d4cc1e96027",
+    "basis": "Original Dimension Z source"
+  },
+  {
+    "path": "dimension-z-app/app/src/main/java/in/dimensionz/hub/MainActivity.java",
+    "sha256": "f75d6ce1e69e45360d089186305d0d039921b0ec8953cf5025e12cfe7983112a",
+    "basis": "Original Dimension Z source"
+  },
+  {
+    "path": "dimension-z-app/app/src/main/res/drawable/dimension_z_icon.xml",
+    "sha256": "f3e3e3ce9bc252fe06a985eb1e2f2ab447e3a2313c6f9c9ab194ed1b18a7f81b",
+    "basis": "Original Dimension Z source"
+  },
+  {
+    "path": "portal-z/app/src/main/AndroidManifest.xml",
+    "sha256": "bdbc505f1537ef80d338d0589adf24b5f00fbe86c38244a8598bdd13f7689834",
+    "basis": "Original Dimension Z source"
+  },
+  {
+    "path": "portal-z/app/src/main/java/in/dimensionz/portal/MainActivity.java",
+    "sha256": "072e4d77ce9b342ed3c7df961340207fc3b99687007e19e10fbfb680416fc3fa",
+    "basis": "Original Dimension Z source"
+  },
+  {
+    "path": "portal-z/app/src/main/java/in/dimensionz/portal/PortalView.java",
+    "sha256": "1b5c2ea6771ad12f90388f79ba0a411476d63040ee93442946a951997dbe1ed2",
+    "basis": "Original Dimension Z source"
+  },
+  {
+    "path": "portal-z/app/src/main/res/drawable/portal_icon.xml",
+    "sha256": "4afcac3fecaf06f1a99e3b090c7a94024c9bea64081be2282fcd8c911f25e80f",
+    "basis": "Original Dimension Z source"
+  },
+  {
+    "path": "Plugins/DeltaPhoneModes/DeltaPhoneModes.uplugin",
+    "sha256": "464eeb0eae5018c3551c52534b6748823970f00b1c16c7b177a5cb028e58066f",
+    "basis": "Original Dimension Z source"
+  },
+  {
+    "path": "Plugins/DeltaPhoneModes/Source/DeltaPhoneModes/DeltaPhoneModes.Build.cs",
+    "sha256": "ed7be0ea540ba531a923c71c87d8cc0c24187576178b525d1b2a934351e2813d",
+    "basis": "Original Dimension Z source"
+  },
+  {
+    "path": "Plugins/DeltaPhoneModes/Source/DeltaPhoneModes/DeltaPhoneModes_APL.xml",
+    "sha256": "266ce5306e4bdd028217e55f3365677932df2f98abd4ba732ea26adb12a0c57a",
+    "basis": "Original Dimension Z source"
+  },
+  {
+    "path": "Plugins/DeltaPhoneModes/Source/DeltaPhoneModes/Private/DeltaLens.cpp",
+    "sha256": "ea78811fccc433ec98f9235b0c80b1cfa5bdda62be82306b9634ad75fc05585b",
+    "basis": "Original Dimension Z source"
+  },
+  {
+    "path": "Plugins/DeltaPhoneModes/Source/DeltaPhoneModes/Private/DeltaLens.h",
+    "sha256": "52b71ecb2ab0ecef6031f1d8804a91c79e35019d65e5e193f65e3be99228a537",
+    "basis": "Original Dimension Z source"
+  },
+  {
+    "path": "Plugins/DeltaPhoneModes/Source/DeltaPhoneModes/Private/DeltaPhoneModes.cpp",
+    "sha256": "1e2476632e8851335756d41037dc75337d53d6a80982e0bc2dfc8fe668e07c4b",
+    "basis": "Original Dimension Z source"
+  },
+  {
+    "path": "Plugins/DeltaPhoneModes/Source/DeltaPhoneModes/Private/DeltaViewerInput.h",
+    "sha256": "5a3a184699ce4ec49cdc48e5623286faf2231212444bff539bb89cb052b4f260",
+    "basis": "Original Dimension Z source"
+  },
+  {
+    "path": "Plugins/DeltaPhoneModes/Source/DeltaPhoneModes/Private/DeltaViewerPanel.h",
+    "sha256": "9000d8962d6d185c98fbada1c2c9b3feb026e2a830a3395db81563d3b098005b",
+    "basis": "Original Dimension Z source"
+  },
+  {
+    "path": "Plugins/DeltaPhoneModes/Source/DeltaPhoneModes/Private/DeltaWorldNavigator.h",
+    "sha256": "086ed0d92df40e98f88b5ffa7f2208149677dff160d8ad7e6582c78e3eadd2c3",
+    "basis": "Original Dimension Z source"
+  }
+]
