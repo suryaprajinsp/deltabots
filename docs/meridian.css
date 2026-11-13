@@ -43,3 +43,20 @@ summary{cursor:pointer;color:var(--ink)}
 .controls{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:8px 18px;padding:0;font-size:.86rem}
 kbd{color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:3px;padding:1px 4px}
 @media(max-width:630px){header,footer,main{width:calc(100% - 22px)}.intro{display:block}.download{display:inline-block;margin-top:12px}.hud{top:8px;left:8px}.target{top:8px;right:8px}.notice{left:8px}nav{gap:10px}header{font-size:.85rem}}
+.touch-controls{display:none}
+@media(any-pointer:coarse){
+  #arena{aspect-ratio:auto;height:min(68svh,620px);min-height:310px}
+  #arena.playing .touch-controls{display:flex;position:absolute;inset:auto 8px 36px;justify-content:space-between;align-items:end;gap:6px;pointer-events:none}
+  .touch-controls button{pointer-events:auto;touch-action:none;user-select:none;background:#08151edc;border-color:#5a7b8b;min-height:36px;padding:4px 5px;font-size:.74rem}
+  .touch-controls button:active{background:#1b6478;border-color:#63e9fb}
+  .touch-move{display:grid;grid-template-columns:repeat(3,36px);gap:3px}
+  .touch-move button:first-child{grid-column:2}
+  .touch-move button:nth-child(2){grid-column:1}
+  .touch-actions{display:grid;grid-template-columns:repeat(3,minmax(42px,1fr));gap:3px}
+  .touch-actions button:last-child{grid-column:2/4;background:#17455a}
+  .notice{font-size:.68rem;bottom:5px}
+  .touch-controls button:focus-visible{outline-offset:1px}
+}
+@media(any-pointer:coarse) and (orientation:landscape){
+  #arena{height:86svh;min-height:235px}
+}

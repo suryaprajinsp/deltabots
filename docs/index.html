@@ -10,7 +10,7 @@
 <body>
 <header><a class="brand" href="./">▽ DELTA BOTS</a><nav><a href="./downloads/">Downloads</a><a href="https://shopperspot.in/dimension-z/">Dimension Z</a></nav></header>
 <main>
-<section class="intro"><div><p class="eyebrow">DIMENSION Z / DESKTOP GAME</p><h1>Meridian</h1><p>Fly the Delta Pack, defeat Beast Masters, and fit the parts you earn.</p></div><a class="download" href="./downloads/">Download editions ↓</a></section>
+<section class="intro"><div><p class="eyebrow">DIMENSION Z / DELTA BOTS</p><h1>Meridian</h1><p>Fly the Delta Pack, defeat Beast Masters, and fit the parts you earn.</p></div><a class="download" href="./downloads/">Download editions ↓</a></section>
 <div class="districts" id="districts" aria-label="Choose a district"></div>
 <section id="arena" aria-label="Delta Bots play area">
 <div class="hud">
@@ -21,7 +21,16 @@
 <div class="target" id="target" hidden><span id="target-name"></span><progress id="target-hull" value="100" max="100"></progress></div>
 <div class="reticle" aria-hidden="true"></div>
 <p class="notice" id="notice" role="status">Loading Delta Bot…</p>
-<div class="start" id="start"><button id="enter" disabled>Loading 3D model…</button><small>Mouse and keyboard · Standard gamepad</small></div>
+<div class="touch-controls" aria-label="Touch controls">
+  <div class="touch-move" role="group" aria-label="Move">
+    <button data-touch="forward" aria-label="Move forward">▲</button><button data-touch="left" aria-label="Move left">◀</button><button data-touch="back" aria-label="Move backward">▼</button><button data-touch="right" aria-label="Move right">▶</button>
+  </div>
+  <div class="touch-actions" role="group" aria-label="Flight and combat">
+    <button data-touch="up">Ascend</button><button data-touch="down">Descend</button><button data-touch="guard">Guard</button>
+    <button data-touch="jump">Jump</button><button data-touch="strike">Strike</button><button data-touch="cannon">Cannon</button><button data-touch="fire">Laser</button>
+  </div>
+</div>
+<div class="start" id="start"><button id="enter" disabled>Loading 3D model…</button><small>Touch · Mouse and keyboard · Standard gamepad</small></div>
 </section>
 <section class="loadout" aria-label="Loadout">
 <label>Strike <select id="move"></select></label>
@@ -35,6 +44,6 @@
 <li><kbd>X / Cross</kbd> Jump, dash, rush · <kbd>O / Circle</kbd> Strike</li><li><kbd>L1 / L2</kbd> Flight · <kbd>R1 / R2</kbd> Weapons · <kbd>Square</kbd> Guard</li>
 </ul></details>
 </main>
-<footer><span>Delta Bots · Meridian 0.2.0</span><a href="./models/delta-meridian.glb" download>Download the rigged GLB</a></footer>
+<footer><span>Delta Bots · Meridian 0.2.1</span><a href="./models/delta-meridian.glb" download>Download the rigged GLB</a></footer>
 <script src="./meridian.js"></script>
 </body></html>
